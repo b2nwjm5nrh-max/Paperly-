@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17202a">
+<title>Paperly — Your Documents, Organized.</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#f5f7fa;--card:#fff;--text:#17202a;--muted:#6d7680;--line:#e4e8ed;--primary:#17202a;--soft:#eef2f6;--blue:#1677ff;--danger:#c73535;--ok:#17824b;--warn:#b06b00;--shadow:0 14px 40px rgba(23,32,42,.08)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.auth-wrap{min-height:100vh;display:grid;place-items:center;padding:24px}.auth-card{width:min(450px,100%);background:var(--card);border:1px solid var(--line);border-radius:28px;padding:30px;box-shadow:var(--shadow)}
+.logo{width:60px;height:60px;border-radius:18px;background:var(--primary);color:white;display:grid;place-items:center;font-weight:800;font-size:26px;margin:0 auto 14px}.brand{text-align:center}.brand h1{margin:0;font-size:30px}.brand p{margin:7px 0 24px;color:var(--muted)}
+.lang{display:flex;justify-content:center;gap:5px;margin-bottom:22px}.lang button{border:0;background:transparent;padding:7px 10px;border-radius:10px;color:var(--muted)}.lang button.active{background:var(--soft);color:var(--text);font-weight:700}
+h1,h2,h3,p{margin-top:0}label{display:block;font-size:13px;font-weight:700;margin:14px 0 7px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;background:#fff;color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,119,255,.1)}textarea{min-height:90px;resize:vertical}
+.primary,.danger{border:0;border-radius:12px;padding:12px 16px;font-weight:700}.primary{background:var(--primary);color:#fff}.danger{background:#fff0f0;color:var(--danger)}.full{width:100%;margin-top:18px}.link{border:0;background:none;color:var(--blue);font-weight:700}.switch{text-align:center;color:var(--muted);font-size:14px;margin-top:17px}.msg{min-height:22px;text-align:center;font-size:14px;margin-top:12px}.error{color:var(--danger)}.success{color:var(--ok)}
+.app{min-height:100vh;display:flex}.sidebar{width:250px;background:#fff;border-inline-end:1px solid var(--line);padding:22px;position:fixed;inset-block:0;inset-inline-start:0;z-index:5}.side-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;margin-bottom:28px}.mini-logo{width:38px;height:38px;border-radius:12px;background:var(--primary);color:#fff;display:grid;place-items:center}
+.nav{display:grid;gap:7px}.nav button{border:0;background:transparent;text-align:start;padding:12px;border-radius:12px;color:var(--muted);font-weight:650}.nav button.active,.nav button:hover{background:var(--soft);color:var(--text)}
+.main{margin-inline-start:250px;width:calc(100% - 250px);padding:26px;max-width:1500px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.topbar h1{margin:0;font-size:27px}.userbox{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}.avatar{width:40px;height:40px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:800;color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 5px 18px rgba(23,32,42,.03)}.stat small{color:var(--muted)}.stat strong{display:block;font-size:27px;margin-top:8px}
+.hero{margin:18px 0;padding:25px;border-radius:20px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:20px}.hero p{margin:7px 0 0;color:#d5dbe1}.hero .primary{background:#fff;color:var(--text)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;margin-top:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.panel-head h2{margin:0;font-size:19px}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px}.search{flex:1}.toolbar select{max-width:190px}
+.docs{display:grid;gap:10px}.doc{border:1px solid var(--line);border-radius:15px;padding:14px;display:flex;align-items:center;gap:13px}.doc-icon{width:43px;height:43px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:20px;flex:0 0 auto}.doc-main{min-width:0;flex:1}.doc-name{font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.doc-meta{font-size:12px;color:var(--muted);margin-top:4px}.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--soft);font-size:11px;margin-inline-start:6px}.badge.warn{background:#fff5df;color:var(--warn)}.badge.expired{background:#ffe9e9;color:var(--danger)}.actions{display:flex;gap:6px}.iconbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 10px}.empty{text-align:center;padding:30px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:grid;place-items:center;padding:18px;z-index:20}.modal-card{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:22px;padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:var(--soft);border-radius:10px;width:36px;height:36px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.fullcol{grid-column:1/-1}
+.drop{border:2px dashed var(--line);border-radius:16px;padding:20px;text-align:center;margin-top:8px;color:var(--muted)}.drop.drag{border-color:var(--blue);background:#f3f8ff}
+.toast{position:fixed;bottom:20px;inset-inline-end:20px;background:var(--primary);color:#fff;padding:12px 16px;border-radius:12px;z-index:50;box-shadow:var(--shadow);max-width:calc(100% - 40px)}
+.mobile-menu{display:none}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.sidebar{display:none}.main{margin:0;width:100%;padding:16px}.mobile-menu{display:block;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px}.topbar{align-items:flex-start}.userbox span{display:none}.hero{align-items:flex-start;flex-direction:column}.toolbar{flex-direction:column;align-items:stretch}.toolbar select{max-width:none}.form-grid{grid-template-columns:1fr}.fullcol{grid-column:auto}.actions{flex-wrap:wrap}.doc{align-items:flex-start}.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.auth-card{padding:22px}.topbar h1{font-size:23px}}
+</style>
+</head>
+<body>
+
+<div id="authView" class="auth-wrap">
+  <main class="auth-card">
+    <div class="brand"><div class="logo">P</div><h1>Paperly</h1><p>Your Documents, Organized.</p></div>
+    <div class="lang">
+      <button data-lang="ar">العربية</button><button data-lang="fr">Français</button><button data-lang="en">English</button>
+    </div>
+    <h2 id="authTitle"></h2>
+    <form id="authForm">
+      <label id="emailLabel" for="email"></label><input id="email" type="email" autocomplete="email" required>
+      <label id="passwordLabel" for="password"></label><input id="password" type="password" autocomplete="current-password" minlength="6" required>
+      <button id="authSubmit" class="primary full" type="submit"></button>
+    </form>
+    <div id="authMsg" class="msg"></div>
+    <div class="switch"><span id="switchText"></span> <button id="toggleAuth" class="link" type="button"></button></div>
+  </main>
+</div>
+
+<div id="appView" class="app hidden">
+  <aside class="sidebar">
+    <div class="side-brand"><div class="mini-logo">P</div><span>Paperly</span></div>
+    <nav class="nav">
+      <button class="active" data-section="home" id="navHome"></button>
+      <button data-section="documents" id="navDocs"></button>
+      <button data-section="expiring" id="navExpiring"></button>
+      <button data-section="settings" id="navSettings"></button>
+    </nav>
+    <div style="position:absolute;bottom:22px;inset-inline:22px"><button id="sideLogout" class="danger full"></button></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px"><button id="mobileMenu" class="mobile-menu">☰</button><div><h1 id="pageTitle"></h1><div id="pageSub" style="color:var(--muted);font-size:13px;margin-top:4px"></div></div></div>
+      <div class="userbox"><span id="userEmail"></span><div id="avatar" class="avatar">P</div></div>
+    </div>
+
+    <section id="homeSection">
+      <div class="grid">
+        <div class="stat"><small id="sDocs"></small><strong id="statDocs">0</strong></div>
+        <div class="stat"><small id="sExpiring"></small><strong id="statExpiring">0</strong></div>
+        <div class="stat"><small id="sExpired"></small><strong id="statExpired">0</strong></div>
+        <div class="stat"><small id="sCategories"></small><strong id="statCategories">0</strong></div>
+      </div>
+      <div class="hero"><div><h2 id="heroTitle"></h2><p id="heroText"></p></div><button class="primary" id="heroAdd"></button></div>
+      <div class="panel"><div class="panel-head"><h2 id="recentTitle"></h2><button class="link" id="viewAll"></button></div><div id="recentDocs" class="docs"></div></div>
+      <div class="panel"><div class="panel-head"><h2 id="alertTitle"></h2></div><div id="alerts" class="docs"></div></div>
+    </section>
+
+    <section id="documentsSection" class="hidden">
+      <div class="panel">
+        <div class="panel-head"><h2 id="allDocsTitle"></h2><button class="primary" id="addBtn"></button></div>
+        <div class="toolbar"><input id="search" class="search" type="search"><select id="filter"><option value="">All</option></select></div>
+        <div id="allDocs" class="docs"></div>
+      </div>
+    </section>
+
+    <section id="expiringSection" class="hidden">
+      <div class="panel"><div class="panel-head"><h2 id="expiryTitle"></h2></div><div id="expiryDocs" class="docs"></div></div>
+    </section>
+
+    <section id="settingsSection" class="hidden">
+      <div class="panel">
+        <div class="panel-head"><h2 id="settingsTitle"></h2></div>
+        <p style="color:var(--muted)" id="settingsEmailText"></p>
+        <label id="settingsLangLabel"></label>
+        <select id="settingsLang"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="modalTitle"></h2><button id="closeModal" class="close">×</button></div>
+    <form id="docForm">
+      <div class="form-grid">
+        <div class="fullcol"><label id="fileLabel"></label><input id="file" type="file" required><div id="drop" class="drop"></div></div>
+        <div><label id="catLabel"></label><select id="category"><option>Personal</option><option>Identity</option><option>Finance</option><option>Health</option><option>Work</option><option>Education</option><option>Home</option><option>Other</option></select></div>
+        <div><label id="dateLabel"></label><input id="expiry" type="date"></div>
+        <div class="fullcol"><label id="notesLabel"></label><textarea id="notes"></textarea></div>
+      </div>
+      <button id="saveDoc" class="primary full" type="submit"></button>
+      <div id="docMsg" class="msg"></div>
+    </form>
+  </div>
+</div>
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const SUPABASE_URL="https://nhmltxminidxdtiifwxm.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable__53zy6TIv8_2htGNwreAXw_c0aq4HYj";
+const {createClient}=supabase; const client=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let user=null, docs=[], signup=false, lang=localStorage.getItem("paperly_lang")||"ar";
+
+const T={
+ar:{authWelcome:"مرحبًا بعودتك",authSignup:"إنشاء حساب",email:"البريد الإلكتروني",pass:"كلمة المرور",signin:"تسجيل الدخول",create:"إنشاء حساب",have:"لديك حساب بالفعل؟",no:"ليس لديك حساب؟",created:"تم إنشاء الحساب. تحقق من بريدك الإلكتروني إذا طُلب منك ذلك.",home:"الرئيسية",documents:"الوثائق",expiring:"قرب الانتهاء",settings:"الإعدادات",logout:"تسجيل الخروج",hello:"مرحبًا بك في Paperly",sub:"كل وثائقك في مكان واحد وبطريقة منظمة.",add:"إضافة وثيقة",docs:"إجمالي الوثائق",exp:"تنتهي قريبًا",expired:"منتهية",cats:"التصنيفات",organize:"نظّم وثائقك بسهولة",hero:"ارفع ملفاتك، أضف تاريخ الانتهاء، وابحث عنها في أي وقت.",recent:"أحدث الوثائق",viewAll:"عرض الكل",alerts:"تنبيهات الوثائق",allDocs:"كل الوثائق",search:"ابحث عن وثيقة...",all:"الكل",expiry:"الوثائق التي تحتاج انتباهًا",settingsTitle:"الإعدادات",account:"البريد المرتبط بالحساب",language:"اللغة",file:"الملف",category:"التصنيف",date:"تاريخ الانتهاء",notes:"ملاحظات",save:"حفظ الوثيقة",close:"إغلاق",choose:"اختر ملفًا أو اسحبه هنا",download:"فتح",share:"مشاركة",delete:"حذف",noDocs:"لا توجد وثائق بعد.",uploading:"جاري رفع الوثيقة...",saved:"تم حفظ الوثيقة.",deleted:"تم حذف الوثيقة.",shared:"تم إنشاء رابط مشاركة صالح لمدة ساعة.",confirmDelete:"هل تريد حذف هذه الوثيقة؟",soon:"قريبًا",today:"اليوم",days:"يوم",none:"لا توجد تنبيهات.",profile:"الحساب",uploadError:"تعذر رفع الملف.",loadError:"تعذر تحميل الوثائق.",invalidFile:"اختر ملفًا صالحًا."},
+fr:{authWelcome:"Bon retour",authSignup:"Créer un compte",email:"E-mail",pass:"Mot de passe",signin:"Se connecter",create:"Créer un compte",have:"Vous avez déjà un compte ?",no:"Vous n'avez pas de compte ?",created:"Compte créé. Vérifiez votre e-mail si une confirmation est demandée.",home:"Accueil",documents:"Documents",expiring:"À échéance",settings:"Paramètres",logout:"Se déconnecter",hello:"Bienvenue sur Paperly",sub:"Tous vos documents au même endroit.",add:"Ajouter un document",docs:"Documents",exp:"Bientôt à échéance",expired:"Expirés",cats:"Catégories",organize:"Organisez vos documents",hero:"Téléversez, ajoutez une échéance et retrouvez vos fichiers rapidement.",recent:"Documents récents",viewAll:"Tout voir",alerts:"Alertes",allDocs:"Tous les documents",search:"Rechercher...",all:"Tous",expiry:"Documents à surveiller",settingsTitle:"Paramètres",account:"E-mail du compte",language:"Langue",file:"Fichier",category:"Catégorie",date:"Date d'échéance",notes:"Notes",save:"Enregistrer",close:"Fermer",choose:"Choisissez un fichier ou glissez-le ici",download:"Ouvrir",share:"Partager",delete:"Supprimer",noDocs:"Aucun document.",uploading:"Téléversement...",saved:"Document enregistré.",deleted:"Document supprimé.",shared:"Lien de partage créé pour une heure.",confirmDelete:"Supprimer ce document ?",soon:"Bientôt",today:"Aujourd'hui",days:"jours",none:"Aucune alerte.",profile:"Compte",uploadError:"Impossible de téléverser le fichier.",loadError:"Impossible de charger les documents.",invalidFile:"Choisissez un fichier valide."},
+en:{authWelcome:"Welcome back",authSignup:"Create account",email:"Email",pass:"Password",signin:"Sign in",create:"Create account",have:"Already have an account?",no:"Don't have an account?",created:"Account created. Check your email if confirmation is required.",home:"Home",documents:"Documents",expiring:"Expiring",settings:"Settings",logout:"Log out",hello:"Welcome to Paperly",sub:"All your documents in one organized place.",add:"Add document",docs:"Documents",exp:"Expiring soon",expired:"Expired",cats:"Categories",organize:"Organize your documents",hero:"Upload files, add expiry dates, and find them quickly.",recent:"Recent documents",viewAll:"View all",alerts:"Document alerts",allDocs:"All documents",search:"Search documents...",all:"All",expiry:"Documents needing attention",settingsTitle:"Settings",account:"Account email",language:"Language",file:"File",category:"Category",date:"Expiry date",notes:"Notes",save:"Save document",close:"Close",choose:"Choose a file or drag it here",download:"Open",share:"Share",delete:"Delete",noDocs:"No documents yet.",uploading:"Uploading...",saved:"Document saved.",deleted:"Document deleted.",shared:"Share link created for one hour.",confirmDelete:"Delete this document?",soon:"Soon",today:"Today",days:"days",none:"No alerts.",profile:"Account",uploadError:"Could not upload the file.",loadError:"Could not load documents.",invalidFile:"Choose a valid file."}
+};
+const t=()=>T[lang];
+
+function applyLang(){
+ document.documentElement.lang=lang; document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+ const x=t();
+ document.getElementById("authTitle").textContent=signup?x.authSignup:x.authWelcome;
+ document.getElementById("emailLabel").textContent=x.email; document.getElementById("passwordLabel").textContent=x.pass;
+ document.getElementById("authSubmit").textContent=signup?x.create:x.signin;
+ document.getElementById("switchText").textContent=signup?x.have:x.no; document.getElementById("toggleAuth").textContent=signup?x.signin:x.create;
+ document.getElementById("navHome").textContent="⌂  "+x.home; document.getElementById("navDocs").textContent="▣  "+x.documents; document.getElementById("navExpiring").textContent="◷  "+x.expiring; document.getElementById("navSettings").textContent="⚙  "+x.settings;
+ document.getElementById("sideLogout").textContent=x.logout; document.getElementById("pageTitle").textContent=x.hello; document.getElementById("pageSub").textContent=x.sub;
+ document.getElementById("sDocs").textContent=x.docs; document.getElementById("sExpiring").textContent=x.exp; document.getElementById("sExpired").textContent=x.expired; document.getElementById("sCategories").textContent=x.cats;
+ document.getElementById("heroTitle").textContent=x.organize; document.getElementById("heroText").textContent=x.hero; document.getElementById("heroAdd").textContent=x.add;
+ document.getElementById("recentTitle").textContent=x.recent; document.getElementById("viewAll").textContent=x.viewAll; document.getElementById("alertTitle").textContent=x.alerts;
+ document.getElementById("allDocsTitle").textContent=x.allDocs; document.getElementById("addBtn").textContent=x.add; document.getElementById("search").placeholder=x.search;
+ document.getElementById("expiryTitle").textContent=x.expiry; document.getElementById("settingsTitle").textContent=x.settingsTitle; document.getElementById("settingsEmailText").textContent=x.account+": "+(user?.email||"");
+ document.getElementById("settingsLangLabel").textContent=x.language; document.getElementById("settingsLang").value=lang;
+ document.getElementById("modalTitle").textContent=x.add; document.getElementById("fileLabel").textContent=x.file; document.getElementById("catLabel").textContent=x.category; document.getElementById("dateLabel").textContent=x.date; document.getElementById("notesLabel").textContent=x.notes; document.getElementById("saveDoc").textContent=x.save; document.getElementById("closeModal").title=x.close; document.getElementById("drop").textContent=x.choose;
+ document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
+ renderAll();
+}
+function msg(el,text,type=""){el.textContent=text;el.className="msg "+type}
+function toast(text){const e=document.getElementById("toast");e.textContent=text;e.classList.remove("hidden");setTimeout(()=>e.classList.add("hidden"),2800)}
+function daysUntil(date){if(!date)return null;const a=new Date();a.setHours(0,0,0,0);const b=new Date(date+"T00:00:00");return Math.ceil((b-a)/86400000)}
+function status(d){const n=daysUntil(d.expiry_date);if(n===null)return "";if(n<0)return `<span class="badge expired">${t().expired}</span>`;if(n<=30)return `<span class="badge warn">${n===0?t().today:n+" "+t().days}</span>`;return ""}
+function docHtml(d){
+ const safe=d.name.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+ const meta=[d.category,d.expiry_date||""].filter(Boolean).join(" · ");
+ return `<div class="doc"><div class="doc-icon">📄</div><div class="doc-main"><div class="doc-name" title="${safe}">${safe}${status(d)}</div><div class="doc-meta">${meta}</div></div><div class="actions"><button class="iconbtn" data-act="open" data-id="${d.id}">↗ ${t().download}</button><button class="iconbtn" data-act="share" data-id="${d.id}">🔗 ${t().share}</button><button class="iconbtn" data-act="delete" data-id="${d.id}">⌫</button></div></div>`
+}
+function renderStats(){
+ const exp=docs.filter(d=>{const n=daysUntil(d.expiry_date);return n!==null&&n>=0&&n<=30}).length;
+ const expired=docs.filter(d=>{const n=daysUntil(d.expiry_date);return n!==null&&n<0}).length;
+ document.getElementById("statDocs").textContent=docs.length;document.getElementById("statExpiring").textContent=exp;document.getElementById("statExpired").textContent=expired;document.getElementById("statCategories").textContent=new Set(docs.map(d=>d.category)).size;
+}
+function renderList(el,arr){
+ el.innerHTML=arr.length?arr.map(docHtml).join(""):`<div class="empty">${t().noDocs}</div>`;
+ el.querySelectorAll("[data-act]").forEach(b=>b.onclick=()=>act(b.dataset.act,b.dataset.id));
+}
+function renderAll(){
+ renderStats();
+ const recent=[...docs].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,5);
+ renderList(document.getElementById("recentDocs"),recent);
+ const alerts=[...docs].filter(d=>{const n=daysUntil(d.expiry_date);return n!==null&&n<=30}).sort((a,b)=>(daysUntil(a.expiry_date)||0)-(daysUntil(b.expiry_date)||0)).slice(0,8);
+ renderList(document.getElementById("alerts"),alerts);
+ const q=document.getElementById("search").value.toLowerCase(), f=document.getElementById("filter").value;
+ renderList(document.getElementById("allDocs"),docs.filter(d=>(!q||d.name.toLowerCase().includes(q)||d.notes?.toLowerCase().includes(q))&&(!f||d.category===f)).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)));
+ renderList(document.getElementById("expiryDocs"),docs.filter(d=>{const n=daysUntil(d.expiry_date);return n!==null&&n<=30}).sort((a,b)=>(daysUntil(a.expiry_date)||0)-(daysUntil(b.expiry_date)||0)));
+}
+function refreshFilter(){
+ const s=document.getElementById("filter"), old=s.value, cats=[...new Set(docs.map(d=>d.category))].sort();
+ s.innerHTML=`<option value="">${t().all}</option>`+cats.map(c=>`<option>${c}</option>`).join("");s.value=cats.includes(old)?old:"";
+}
+async function loadDocs(){
+ if(!user)return; const {data,error}=await client.from("documents").select("*").eq("user_id",user.id).order("created_at",{ascending:false});
+ if(error){toast(t().loadError);return} docs=data||[];refreshFilter();renderAll();
+}
+async function act(kind,id){
+ const d=docs.find(x=>x.id===id);if(!d)return;
+ if(kind==="delete"){
+   if(!confirm(t().confirmDelete))return;
+   const {error:e1}=await client.storage.from("documents").remove([d.file_path]);
+   const {error:e2}=await client.from("documents").delete().eq("id",id).eq("user_id",user.id);
+   if(e1||e2){toast(t().uploadError);return} docs=docs.filter(x=>x.id!==id);refreshFilter();renderAll();toast(t().deleted);
+ }
+ if(kind==="open"){
+   const {data,error}=await client.storage.from("documents").createSignedUrl(d.file_path,3600);
+   if(error){toast(error.message);return} window.open(data.signedUrl,"_blank");
+ }
+ if(kind==="share"){
+   const {data,error}=await client.storage.from("documents").createSignedUrl(d.file_path,3600);
+   if(error){toast(error.message);return}
+   try{await navigator.clipboard.writeText(data.signedUrl);toast(t().shared)}catch{prompt("Share link",data.signedUrl)}
+ }
+}
+function openModal(){document.getElementById("modal").classList.remove("hidden");document.getElementById("docForm").reset();msg(document.getElementById("docMsg"),"");document.getElementById("drop").textContent=t().choose}
+function closeModal(){document.getElementById("modal").classList.add("hidden")}
+document.getElementById("addBtn").onclick=openModal;document.getElementById("heroAdd").onclick=openModal;document.getElementById("closeModal").onclick=closeModal;
+document.getElementById("mobileMenu").onclick=()=>document.querySelector(".sidebar").style.display="block";
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");["home","documents","expiring","settings"].forEach(s=>document.getElementById(s+"Section").classList.toggle("hidden",s!==b.dataset.section));if(innerWidth<=720)document.querySelector(".sidebar").style.display="none"});
+document.getElementById("viewAll").onclick=()=>document.querySelector('[data-section="documents"]').click();
+document.getElementById("search").oninput=renderAll;document.getElementById("filter").onchange=renderAll;
+document.getElementById("settingsLang").onchange=e=>{lang=e.target.value;localStorage.setItem("paperly_lang",lang);applyLang()};
+document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.lang;localStorage.setItem("paperly_lang",lang);applyLang()});
+document.getElementById("toggleAuth").onclick=()=>{signup=!signup;applyLang();msg(document.getElementById("authMsg"),"");document.getElementById("authForm").reset()};
+document.getElementById("authForm").onsubmit=async e=>{
+ e.preventDefault();const btn=document.getElementById("authSubmit");btn.disabled=true;msg(document.getElementById("authMsg"),"");
+ try{
+  const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
+  if(signup){const {data,error}=await client.auth.signUp({email,password});if(error)throw error;if(!data.session){msg(document.getElementById("authMsg"),t().created,"success")}else enter(data.session.user)}
+  else{const {data,error}=await client.auth.signInWithPassword({email,password});if(error)throw error;enter(data.user)}
+ }catch(e){msg(document.getElementById("authMsg"),e.message,"error")}finally{btn.disabled=false}
+};
+async function enter(u){user=u;document.getElementById("authView").classList.add("hidden");document.getElementById("appView").classList.remove("hidden");document.getElementById("userEmail").textContent=u.email||"";document.getElementById("avatar").textContent=(u.email||"P").slice(0,1).toUpperCase();applyLang();await loadDocs()}
+document.getElementById("sideLogout").onclick=async()=>{await client.auth.signOut();location.reload()};
+document.getElementById("docForm").onsubmit=async e=>{
+ e.preventDefault();const file=document.getElementById("file").files[0];if(!file){msg(document.getElementById("docMsg"),t().invalidFile,"error");return}
+ const btn=document.getElementById("saveDoc");btn.disabled=true;msg(document.getElementById("docMsg"),t().uploading);
+ try{
+  const path=user.id+"/"+crypto.randomUUID()+"-"+file.name.replace(/[^\w.\- ()]/g,"_");
+  const {error:up}=await client.storage.from("documents").upload(path,file,{upsert:false,contentType:file.type||"application/octet-stream"});
+  if(up)throw up;
+  const payload={user_id:user.id,name:file.name,file_path:path,category:document.getElementById("category").value,expiry_date:document.getElementById("expiry").value||null,notes:document.getElementById("notes").value.trim()||null};
+  const {data,error:ins}=await client.from("documents").insert(payload).select().single();
+  if(ins){await client.storage.from("documents").remove([path]);throw ins}
+  docs.unshift(data);refreshFilter();renderAll();closeModal();toast(t().saved);
+ }catch(e){msg(document.getElementById("docMsg"),e.message||t().uploadError,"error")}finally{btn.disabled=false}
+};
+const drop=document.getElementById("drop");
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("drag")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("drag")}));
+drop.addEventListener("drop",e=>{if(e.dataTransfer.files.length){document.getElementById("file").files=e.dataTransfer.files;drop.textContent=e.dataTransfer.files[0].name}});
+document.getElementById("file").onchange=e=>{if(e.target.files[0])drop.textContent=e.target.files[0].name};
+
+client.auth.onAuthStateChange((event,session)=>{if(session&&!user)enter(session.user)});
+(async()=>{applyLang();const {data}=await client.auth.getSession();if(data.session)enter(data.session.user)})();
+</script>
+</body>
+</html>
