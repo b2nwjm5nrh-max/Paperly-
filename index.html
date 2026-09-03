@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Paperly — Your Documents, Organized.</title>
+<style>
+:root{
+  --bg:#f5f7fb;--surface:#fff;--surface2:#f8faff;--text:#17213b;--muted:#74809a;
+  --line:#e6ebf3;--primary:#4267e8;--primary2:#7358df;--success:#1da873;
+  --warning:#e59a18;--danger:#df5260;--shadow:0 10px 30px rgba(31,48,86,.07);
+  --radius:18px
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}a{text-decoration:none;color:inherit}
+.app{display:flex;min-height:100vh}.sidebar{width:270px;background:var(--surface);border-left:1px solid var(--line);padding:22px 16px;position:fixed;right:0;top:0;height:100vh;z-index:20;overflow:auto}
+.brand{display:flex;align-items:center;gap:11px;padding:4px 7px 22px}.brandMark{width:43px;height:43px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 8px 18px #4267e833}.brand strong{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:2px}
+.add{width:100%;padding:13px 15px;border-radius:13px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;font-weight:800;box-shadow:0 9px 20px #4267e82e;margin-bottom:18px}
+.navTitle{font-size:11px;color:#9aa4b8;font-weight:800;letter-spacing:.8px;margin:17px 10px 7px}.nav button{display:flex;align-items:center;gap:11px;width:100%;text-align:right;background:transparent;padding:11px 12px;border-radius:12px;color:#65718a;margin:3px 0}.nav button:hover,.nav button.active{background:#eef3ff;color:#2f60dc}.nav .badge{margin-right:auto;background:#eef1f7;color:#69758c;border-radius:20px;padding:2px 7px;font-size:11px}
+.storage{margin-top:24px;padding:15px;border:1px solid var(--line);background:var(--surface2);border-radius:15px}.storageTop{display:flex;justify-content:space-between}.bar{height:8px;background:#e4e9f3;border-radius:20px;overflow:hidden;margin:10px 0}.bar span{display:block;height:100%;width:24%;background:linear-gradient(90deg,var(--primary),var(--primary2));border-radius:20px}
+.main{margin-right:270px;flex:1;min-width:0;padding:18px 28px 45px}.top{height:62px;display:flex;align-items:center;gap:15px;border-bottom:1px solid var(--line)}.search{flex:1;max-width:620px;position:relative}.search input{width:100%;padding:13px 46px 13px 45px;border:1px solid var(--line);border-radius:30px;background:var(--surface);outline:0}.search input:focus{border-color:#9bb1f7;box-shadow:0 0 0 4px #4267e812}.searchIcon{position:absolute;right:17px;top:11px;color:#7b879f}.shortcut{position:absolute;left:10px;top:8px;border:1px solid var(--line);padding:3px 7px;border-radius:7px;color:#9aa4b8;font-size:11px}
+.topActions{display:flex;gap:8px;margin-right:auto}.iconBtn{width:42px;height:42px;border:1px solid var(--line);background:var(--surface);border-radius:12px;position:relative}.dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--danger);top:8px;right:8px;border:2px solid #fff}.profile{display:flex;align-items:center;gap:9px;padding-right:8px}.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#dfe8ff;color:#315bd1;font-weight:900}.profile small{display:block;color:var(--muted)}
+.hero{display:flex;align-items:center;justify-content:space-between;padding:29px 0 20px;gap:20px}.hero h1{margin:0 0 6px;font-size:29px}.muted{color:var(--muted)}.heroActions{display:flex;gap:9px}.ghost{background:var(--surface);border:1px solid var(--line);padding:11px 14px;border-radius:11px;color:#59667f}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.stat{padding:18px;display:flex;justify-content:space-between;align-items:center}.stat .num{font-size:28px;font-weight:900;margin:4px 0}.stat .icon{width:47px;height:47px;border-radius:15px;background:#eef3ff;display:grid;place-items:center;font-size:21px}
+.grid{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-top:16px}.section{padding:19px}.sectionTitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.sectionTitle h3{margin:0;font-size:16px}.link{color:var(--primary);font-size:13px;font-weight:700}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.cat{padding:16px 9px;border:1px solid var(--line);border-radius:14px;text-align:center;background:var(--surface2);transition:.2s}.cat:hover{transform:translateY(-2px);box-shadow:0 8px 18px #22335b10}.catIcon{width:42px;height:42px;border-radius:13px;margin:0 auto 8px;display:grid;place-items:center;font-size:20px;background:#eef3ff}.cat b{display:block;font-size:12px;line-height:1.5}.cat span{font-size:11px;color:var(--muted)}
+.quick button{width:100%;display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--line);padding:11px 12px;margin:6px 0;border-radius:11px;text-align:right;color:#46536c}.quick button:hover{background:#eef3ff;color:#2f60dc}
+.tableWrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:650px}.table th,.table td{padding:13px 8px;border-bottom:1px solid var(--line);text-align:right;font-size:13px}.table th{color:#8a95a9;font-weight:700}.fileName{display:flex;align-items:center;gap:10px}.fileIcon{width:37px;height:37px;border-radius:10px;background:#eef3ff;display:grid;place-items:center}.tag{display:inline-block;padding:5px 9px;border-radius:20px;background:#edf3ff;color:#3265d9;font-size:11px}.actions{display:flex;gap:5px}.actions button{background:#f1f4f9;padding:7px 9px;border-radius:8px;color:#536079}.actions button:hover{background:#e8edfa;color:#2f60dc}
+.expiry{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.expiry:last-child{border:0}.expiry b{font-size:12px}.danger{color:var(--danger)}.warning{color:var(--warning)}.success{color:var(--success)}
+.empty{text-align:center;padding:38px;color:#8a95a9;display:none}.empty.show{display:block}
+.modal{display:none;position:fixed;inset:0;background:#14203d88;backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:18px;z-index:50}.modal.show{display:flex}.modalBox{width:min(620px,100%);background:var(--surface);border-radius:22px;padding:23px;box-shadow:0 30px 70px #0e1a382e;max-height:92vh;overflow:auto}.modalHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modalHead h2{margin:0;font-size:20px}.close{width:36px;height:36px;border-radius:10px;background:#f1f4f9}.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.full{grid-column:1/-1}.field label{display:block;font-size:12px;color:#68748b;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--surface2);outline:0}.field textarea{min-height:85px;resize:vertical}.drop{border:2px dashed #cbd5e8;border-radius:15px;padding:24px;text-align:center;background:#fafbfe}.drop.drag{border-color:var(--primary);background:#eef3ff}.drop input{margin-top:9px}.modalActions{display:flex;justify-content:flex-start;gap:9px;margin-top:17px}.primary{background:var(--primary);color:#fff;padding:11px 18px;border-radius:10px;font-weight:800}.secondary{background:#eef2f8;padding:11px 18px;border-radius:10px}
+.toast{position:fixed;left:20px;bottom:20px;z-index:100;background:#17213b;color:#fff;padding:12px 16px;border-radius:12px;box-shadow:0 15px 35px #17213b33;display:none}.toast.show{display:block;animation:in .2s ease}@keyframes in{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.mobileMenu{display:none}
+body.dark{--bg:#0f1420;--surface:#171d2b;--surface2:#111827;--text:#eef2fa;--muted:#9ba7bb;--line:#283247;--shadow:0 10px 30px #0003}.dark .search input,.dark .field input,.dark .field select,.dark .field textarea{color:var(--text)}.dark .dot{border-color:var(--surface)}
+@media(max-width:1100px){.sidebar{width:230px}.main{margin-right:230px}.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:760px){.sidebar{display:none}.sidebar.open{display:block;width:86%;box-shadow:-20px 0 60px #0002}.main{margin-right:0;padding:12px 13px 35px}.mobileMenu{display:block}.top{height:56px}.topActions .hideMob{display:none}.profile .name{display:none}.hero{align-items:flex-start;flex-direction:column}.hero h1{font-size:23px}.heroActions{width:100%}.heroActions button{flex:1}.stats{grid-template-columns:1fr 1fr;gap:9px}.stat{padding:14px}.stat .num{font-size:23px}.stat .icon{width:40px;height:40px}.cats{grid-template-columns:1fr 1fr}.formGrid{grid-template-columns:1fr}.field.full{grid-column:auto}.table{min-width:590px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="brandMark">P</div><div><strong>Paperly</strong><small>Your Documents, Organized.</small></div></div>
+  <button class="add" onclick="openAdd()">＋ إضافة وثيقة جديدة</button>
+  <div class="navTitle">المكتبة</div>
+  <nav class="nav">
+    <button class="active" data-view="all" onclick="setView('all',this)">⌂ لوحة التحكم <span class="badge" id="allBadge">0</span></button>
+    <button data-view="favorites" onclick="setView('favorites',this)">☆ المفضلة <span class="badge" id="favBadge">0</span></button>
+    <button data-view="expiring" onclick="setView('expiring',this)">◷ تنتهي قريباً <span class="badge" id="expBadge">0</span></button>
+    <button data-view="trash" onclick="setView('trash',this)">♲ المحذوفات <span class="badge" id="trashBadge">0</span></button>
+  </nav>
+  <div class="navTitle">التصنيفات</div>
+  <nav class="nav">
+    <button onclick="filterCategory('الهوية الشخصية')">🪪 الهوية الشخصية</button>
+    <button onclick="filterCategory('السفر والجوازات')">✈️ السفر والجوازات</button>
+    <button onclick="filterCategory('الشهادات العلمية')">🎓 الشهادات العلمية</button>
+    <button onclick="filterCategory('العقود والاتفاقيات')">📄 العقود والاتفاقيات</button>
+    <button onclick="filterCategory('المعاملات البنكية')">🏦 المعاملات البنكية</button>
+    <button onclick="filterCategory('التأمين')">🛡️ التأمين</button>
+  </nav>
+  <div class="storage"><div class="storageTop"><b>المساحة المستخدمة</b><span id="storagePct">0%</span></div><p class="muted" id="storageText">0 MB من 10 GB</p><div class="bar"><span id="storageBar"></span></div><small class="muted">التخزين الخاص بك محمي</small></div>
+</aside>
+
+<main class="main">
+<header class="top">
+  <button class="iconBtn mobileMenu" onclick="toggleSidebar()">☰</button>
+  <div class="search"><span class="searchIcon">⌕</span><input id="search" placeholder="ابحث بالاسم أو التصنيف أو الملاحظات..." oninput="render()"><span class="shortcut">⌘ K</span></div>
+  <div class="topActions">
+    <button class="iconBtn" onclick="showNotifications()">🔔<i class="dot"></i></button>
+    <button class="iconBtn hideMob" onclick="toggleDark()">☾</button>
+    <button class="iconBtn hideMob" onclick="setLang()">ع</button>
+    <div class="profile"><div class="avatar" id="avatar">P</div><div class="name"><b id="userName">Paperly</b><small id="userEmail">مساحة وثائقك</small></div></div>
+  </div>
+</header>
+
+<section class="hero">
+  <div><h1 id="welcome">مرحباً بك في Paperly 👋</h1><div class="muted">إدارة وتنظيم جميع أوراقك ومستنداتك بسهولة وأمان</div></div>
+  <div class="heroActions"><button class="ghost" onclick="exportData()">↥ تصدير القائمة</button><button class="primary" onclick="openAdd()">＋ إضافة وثيقة</button></div>
+</section>
+
+<section class="stats">
+ <div class="card stat"><div><div class="muted">إجمالي الوثائق</div><div class="num" id="docCount">0</div><small class="muted">وثيقة محفوظة</small></div><div class="icon">▱</div></div>
+ <div class="card stat"><div><div class="muted">التصنيفات</div><div class="num" id="catCount">7</div><small class="muted">تصنيف رئيسي</small></div><div class="icon">▦</div></div>
+ <div class="card stat"><div><div class="muted">تنتهي قريباً</div><div class="num warning" id="expCount">0</div><small class="muted">خلال 30 يوماً</small></div><div class="icon">◷</div></div>
+ <div class="card stat"><div><div class="muted">منتهية</div><div class="num danger" id="expiredCount">0</div><small class="muted">تحتاج تجديد</small></div><div class="icon">!</div></div>
+</section>
+
+<div class="grid">
+<section class="card section">
+ <div class="sectionTitle"><h3>التصنيفات الرئيسية</h3><a class="link" onclick="setView('all')">عرض الكل</a></div>
+ <div class="cats" id="cats"></div>
+</section>
+<section class="card section quick">
+ <div class="sectionTitle"><h3>إجراءات سريعة</h3></div>
+ <button onclick="openAdd()">➕ <span>إضافة وثيقة جديدة</span></button>
+ <button onclick="focusSearch()">⌕ <span>البحث في الوثائق</span></button>
+ <button onclick="setView('expiring')">◷ <span>مراجعة الوثائق المنتهية</span></button>
+ <button onclick="exportData()">↥ <span>تصدير قائمة الوثائق</span></button>
+</section>
+</div>
+
+<div class="grid">
+<section class="card section">
+ <div class="sectionTitle"><h3 id="listTitle">أحدث الوثائق</h3><span class="muted" id="resultCount"></span></div>
+ <div class="tableWrap"><table class="table"><thead><tr><th>الوثيقة</th><th>التصنيف</th><th>الإضافة</th><th>الانتهاء</th><th>الإجراءات</th></tr></thead><tbody id="docs"></tbody></table></div>
+ <div id="empty" class="empty">📂<br><b>لا توجد وثائق هنا</b><br><small>أضف أول وثيقة إلى Paperly.</small></div>
+</section>
+<aside class="card section">
+ <div class="sectionTitle"><h3>تنبيهات الانتهاء</h3><a class="link" onclick="setView('expiring')">عرض الكل</a></div>
+ <div id="expiryList"></div>
+</aside>
+</div>
+</main>
+</div>
+
+<div class="modal" id="modal"><div class="modalBox">
+ <div class="modalHead"><h2>إضافة وثيقة جديدة</h2><button class="close" onclick="closeModal()">×</button></div>
+ <div class="formGrid">
+  <div class="field"><label>اسم الوثيقة *</label><input id="name" placeholder="مثال: عقد العمل"></div>
+  <div class="field"><label>التصنيف</label><select id="category"><option>الهوية الشخصية</option><option>السفر والجوازات</option><option>الشهادات العلمية</option><option>العقود والاتفاقيات</option><option>المعاملات البنكية</option><option>التأمين</option><option>أخرى</option></select></div>
+  <div class="field"><label>تاريخ الانتهاء</label><input id="expiry" type="date"></div>
+  <div class="field"><label>ملاحظات</label><input id="notes" placeholder="معلومة اختيارية"></div>
+  <div class="field full"><label>الملف</label><div class="drop" id="drop">📎 اسحب الملف هنا أو اختره<br><input id="file" type="file" accept=".pdf,image/*,.doc,.docx"></div></div>
+ </div>
+ <div class="modalActions"><button class="primary" onclick="addDoc()">حفظ الوثيقة</button><button class="secondary" onclick="closeModal()">إلغاء</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY="paperly_v2_docs";
+const TRASH_KEY="paperly_v2_trash";
+const FAV_KEY="paperly_v2_favs";
+const CATS=[
+ ["الهوية الشخصية","🪪"],["السفر والجوازات","✈️"],["الشهادات العلمية","🎓"],
+ ["العقود والاتفاقيات","📄"],["المعاملات البنكية","🏦"],["التأمين","🛡️"],["أخرى","•••"]
+];
+let docs=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")||[
+ {id:1,name:"جواز سفر",category:"السفر والجوازات",created:"2026-08-28",expiry:"2027-08-28",type:"PDF",size:1.8,notes:""},
+ {id:2,name:"بطاقة الهوية الوطنية",category:"الهوية الشخصية",created:"2026-08-26",expiry:"2026-10-12",type:"PDF",size:1.2,notes:"تجديد قريب"},
+ {id:3,name:"شهادة بكالوريوس",category:"الشهادات العلمية",created:"2026-08-20",expiry:"",type:"PDF",size:2.4,notes:""},
+ {id:4,name:"عقد عمل",category:"العقود والاتفاقيات",created:"2026-08-16",expiry:"2027-01-20",type:"PDF",size:0.8,notes:""},
+ {id:5,name:"وثيقة تأمين",category:"التأمين",created:"2026-08-10",expiry:"2026-09-20",type:"PDF",size:1.5,notes:""}
+];
+let trash=JSON.parse(localStorage.getItem(TRASH_KEY)||"[]");
+let favs=new Set(JSON.parse(localStorage.getItem(FAV_KEY)||"[]"));
+let view="all", categoryFilter="";
+const today=new Date(); today.setHours(0,0,0,0);
+
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(docs));localStorage.setItem(TRASH_KEY,JSON.stringify(trash));localStorage.setItem(FAV_KEY,JSON.stringify([...favs]));}
+function daysLeft(d){if(!d)return null;return Math.ceil((new Date(d+"T00:00:00")-today)/86400000)}
+function status(d){let x=daysLeft(d.expiry);return x===null?"":x<0?"expired":x<=30?"soon":"ok"}
+function fmt(d){if(!d)return "—";return new Date(d+"T00:00:00").toLocaleDateString("ar-TN",{year:"numeric",month:"short",day:"numeric"})}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+function renderCats(){
+ document.getElementById("cats").innerHTML=CATS.slice(0,4).map(([n,i])=>{
+   let count=docs.filter(d=>d.category===n).length;
+   return `<button class="cat" onclick="filterCategory('${n}')"><div class="catIcon">${i}</div><b>${n}</b><span>${count} وثيقة</span></button>`;
+ }).join("");
+}
+function filtered(){
+ let q=document.getElementById("search").value.trim().toLowerCase();
+ let list=view==="trash"?trash.slice():docs.slice();
+ if(view==="favorites") list=list.filter(d=>favs.has(String(d.id)));
+ if(view==="expiring") list=list.filter(d=>{let s=status(d);return s==="soon"||s==="expired"});
+ if(categoryFilter) list=list.filter(d=>d.category===categoryFilter);
+ if(q) list=list.filter(d=>(d.name+" "+d.category+" "+d.notes).toLowerCase().includes(q));
+ return list;
+}
+function render(){
+ let list=filtered();
+ document.getElementById("docs").innerHTML=list.map(d=>{
+   let s=status(d), fav=favs.has(String(d.id));
+   return `<tr><td><div class="fileName"><div class="fileIcon">📄</div><div><b>${esc(d.name)}</b><br><small class="muted">${esc(d.type||"FILE")} · ${d.size?d.size+" MB":""}</small></div></div></td>
+   <td><span class="tag">${esc(d.category)}</span></td><td>${fmt(d.created)}</td>
+   <td class="${s==="expired"?"danger":s==="soon"?"warning":""}">${fmt(d.expiry)}</td>
+   <td><div class="actions">${view!=="trash"?`<button onclick="toggleFav(${d.id})">${fav?"★":"☆"}</button><button onclick="openDoc(${d.id})">فتح</button><button onclick="moveTrash(${d.id})">حذف</button>`:`<button onclick="restore(${d.id})">استرجاع</button><button onclick="deleteForever(${d.id})">حذف نهائي</button>`}</div></td></tr>`;
+ }).join("");
+ document.getElementById("empty").classList.toggle("show",list.length===0);
+ document.getElementById("resultCount").textContent=list.length+" نتيجة";
+ document.getElementById("docCount").textContent=docs.length;
+ document.getElementById("catCount").textContent=new Set(docs.map(d=>d.category)).size;
+ document.getElementById("expCount").textContent=docs.filter(d=>status(d)==="soon").length;
+ document.getElementById("expiredCount").textContent=docs.filter(d=>status(d)==="expired").length;
+ document.getElementById("allBadge").textContent=docs.length;
+ document.getElementById("favBadge").textContent=[...favs].filter(id=>docs.some(d=>String(d.id)===id)).length;
+ document.getElementById("expBadge").textContent=docs.filter(d=>["soon","expired"].includes(status(d))).length;
+ document.getElementById("trashBadge").textContent=trash.length;
+ let size=docs.reduce((a,d)=>a+(Number(d.size)||0),0), pct=Math.min(100,size/10240*100);
+ document.getElementById("storagePct").textContent=Math.round(pct)+"%";
+ document.getElementById("storageText").textContent=(size<1000?size.toFixed(1)+" MB":(size/1024).toFixed(2)+" GB")+" من 10 GB";
+ document.getElementById("storageBar").style.width=Math.max(1,pct)+"%";
+ let upcoming=docs.filter(d=>["soon","expired"].includes(status(d))).sort((a,b)=>(daysLeft(a.expiry)??9999)-(daysLeft(b.expiry)??9999)).slice(0,4);
+ document.getElementById("expiryList").innerHTML=upcoming.length?upcoming.map(d=>{let x=daysLeft(d.expiry);return `<div class="expiry"><span>📄 <b>${esc(d.name)}</b><br><small class="muted">${fmt(d.expiry)}</small></span><b class="${x<0?"danger":"warning"}">${x<0?"منتهية":"بعد "+x+" يوم"}</b></div>`}).join(""):`<div class="empty show">✨<br>لا توجد تنبيهات حالياً</div>`;
+ document.getElementById("listTitle").textContent=view==="trash"?"المحذوفات":view==="favorites"?"المفضلة":view==="expiring"?"الوثائق التي تحتاج مراجعة":categoryFilter||"أحدث الوثائق";
+}
+function setView(v,el){view=v;categoryFilter="";document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));if(el)el.classList.add("active");render()}
+function filterCategory(c){view="all";categoryFilter=c;document.getElementById("search").value="";render()}
+function toggleFav(id){let k=String(id);favs.has(k)?favs.delete(k):favs.add(k);save();render();toast(favs.has(k)?"أضيفت إلى المفضلة":"أزيلت من المفضلة")}
+function moveTrash(id){let i=docs.findIndex(d=>d.id===id);if(i<0)return;trash.unshift(docs.splice(i,1)[0]);save();render();toast("تم نقل الوثيقة إلى المحذوفات")}
+function restore(id){let i=trash.findIndex(d=>d.id===id);if(i<0)return;docs.unshift(trash.splice(i,1)[0]);save();render();toast("تم استرجاع الوثيقة")}
+function deleteForever(id){if(!confirm("حذف الوثيقة نهائياً؟"))return;trash=trash.filter(d=>d.id!==id);save();render();toast("تم الحذف النهائي")}
+function openDoc(id){let d=docs.find(x=>x.id===id);if(!d)return;alert("📄 "+d.name+"\\n\\nالتصنيف: "+d.category+"\\nتاريخ الإضافة: "+fmt(d.created)+"\\nتاريخ الانتهاء: "+fmt(d.expiry)+"\\n\\nفي النسخة المتصلة بـ Supabase سيُفتح الملف الأصلي هنا.")}
+function openAdd(){document.getElementById("modal").classList.add("show");document.getElementById("name").focus()}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function addDoc(){
+ let n=document.getElementById("name").value.trim(); if(!n){toast("اكتب اسم الوثيقة أولاً");return}
+ let f=document.getElementById("file").files[0], now=new Date().toISOString().slice(0,10);
+ docs.unshift({id:Date.now(),name:n,category:document.getElementById("category").value,expiry:document.getElementById("expiry").value,created:now,type:f?((f.name.split(".").pop()||"FILE").toUpperCase()):"FILE",size:f?Math.max(.1,Math.round(f.size/104857.6)/10):.1,notes:document.getElementById("notes").value.trim()});
+ save();render();closeModal();["name","expiry","notes"].forEach(id=>document.getElementById(id).value="");document.getElementById("file").value="";toast("تمت إضافة الوثيقة بنجاح")}
+function focusSearch(){document.getElementById("search").focus();window.scrollTo({top:0,behavior:"smooth"})}
+function toggleDark(){document.body.classList.toggle("dark");localStorage.setItem("paperly_dark",document.body.classList.contains("dark"))}
+function toggleSidebar(){document.getElementById("sidebar").classList.toggle("open")}
+function showNotifications(){setView("expiring");toast("عرضنا لك الوثائق التي تحتاج مراجعة")}
+function setLang(){toast("اللغات المتاحة: العربية · Français · English")}
+function exportData(){let blob=new Blob([JSON.stringify(docs,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="paperly-documents.json";a.click();URL.revokeObjectURL(a.href);toast("تم تصدير قائمة الوثائق")}
+function toast(msg){let t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove("show"),2600)}
+document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();focusSearch()}if(e.key==="Escape")closeModal()});
+document.getElementById("drop").addEventListener("dragover",e=>{e.preventDefault();document.getElementById("drop").classList.add("drag")});
+document.getElementById("drop").addEventListener("dragleave",()=>document.getElementById("drop").classList.remove("drag"));
+document.getElementById("drop").addEventListener("drop",e=>{e.preventDefault();document.getElementById("drop").classList.remove("drag");if(e.dataTransfer.files[0]){let dt=new DataTransfer();dt.items.add(e.dataTransfer.files[0]);document.getElementById("file").files=dt.files;toast("تم اختيار الملف")}})
+if(localStorage.getItem("paperly_dark")==="true")document.body.classList.add("dark");
+renderCats();render();
+</script>
+</body>
+</html>
