@@ -143,7 +143,7 @@ body.dark{--bg:#0c1422;--surface:#151f30;--surface2:#111a29;--text:#eef4ff;--mut
 </section>
 </main></div>
 <div class="toast" id="toast"></div>
-<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3>👋 مرحباً بك</h3><p class="muted">هذه النسخة تعمل محلياً. يمكنك لاحقاً ربط Supabase وواجهة AI حقيقية دون كشف المفاتيح في المتصفح.</p><button class="primary" onclick="closeModal()">حسنًا</button></div></div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3>👋 مرحباً بك</h3><p class="muted">هذه النسخة متصلة بـ Cloudflare Workers AI عبر خادم آمن، والمفتاح/الربط لا يظهر في المتصفح.</p><button class="primary" onclick="closeModal()">حسنًا</button></div></div>
 
 <script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
@@ -160,7 +160,29 @@ function openModal(){$('#modal').classList.add('show')}function closeModal(){$('
 function gain(n){state.xp+=n;persist();$('#xp').textContent=state.xp;toast('🎉 +'+n+' XP')}
 function loadDemo(){$('#lessonTitle').value='الدوال الرياضية';$('#subject').value='الرياضيات';$('#lessonText').value='الدالة علاقة تربط كل عنصر من مجموعة بعنصر واحد فقط من مجموعة أخرى. يمكن تمثيل الدالة بجدول أو مخطط أو صيغة رياضية. المجال هو مجموعة القيم التي تدخل إلى الدالة، والمدى هو مجموعة القيم الناتجة. نستخدم الدوال لوصف العلاقات بين الكميات.';toast('تم تحميل درس تجريبي')}
 function clearStudy(){$('#lessonTitle').value='';$('#lessonText').value='';$('#studyResult').innerHTML=''}
-function analyzeLesson(){const text=$('#lessonText').value.trim(),title=$('#lessonTitle').value.trim()||'الدرس';if(!text){toast('أدخل نص الدرس أولاً');return}const parts=text.split(/[.!؟\n]/).map(x=>x.trim()).filter(Boolean);const points=parts.slice(0,6);$('#studyResult').innerHTML='<div class="result"><h3>✨ بطاقة فهم: '+escapeHtml(title)+'</h3><p><b>شرح مبسط:</b> '+escapeHtml(text.slice(0,650))+(text.length>650?'…':'')+'</p><h4>🔑 أهم الأفكار</h4><ul>'+points.map(p=>'<li>'+escapeHtml(p)+'</li>').join('')+'</ul><h4>🧠 أسئلة الاسترجاع</h4><ul><li>ما الفكرة الرئيسية في الدرس؟</li><li>ما أهم المصطلحات والقواعد؟</li><li>هل تستطيع شرح الدرس لشخص آخر دون النظر إليه؟</li></ul><div class="actions"><button class="primary" onclick="go(\\'quiz\\')">📝 اختبرني</button><button class="secondary" onclick="gain(40)">حفظ جلسة المذاكرة +40 XP</button></div></div>';gain(30)}
+async function analyzeLesson(){
+  const text=$('#lessonText').value.trim(),title=$('#lessonTitle').value.trim()||'الدرس';
+  if(!text){toast('أدخل نص الدرس أولاً');return}
+  const box=$('#studyResult');
+  box.innerHTML='<div class="result"><h3>🤖 مُذاكر AI يعمل الآن...</h3><p class="muted">جاري تحليل الدرس وإنشاء شرح وأسئلة وبطاقات مراجعة.</p></div>';
+  try{
+    const res=await fetch('/api/ai',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({action:'analyze',title,lesson:text})
+    });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||'حدث خطأ في خدمة الذكاء الاصطناعي');
+    box.innerHTML='<div class="result"><h3>🤖 بطاقة فهم AI: '+escapeHtml(title)+'</h3>'+
+      '<div style="white-space:pre-wrap;line-height:1.9">'+escapeHtml(data.text||'لم يتم إرجاع نتيجة.')+'</div>'+
+      '<div class="actions"><button class="primary" onclick="go(\'quiz\')">📝 اختبرني</button>'+
+      '<button class="secondary" onclick="gain(40)">حفظ جلسة المذاكرة +40 XP</button></div></div>';
+    gain(30);
+  }catch(err){
+    box.innerHTML='<div class="result"><h3>⚠️ تعذر تشغيل AI</h3><p>'+escapeHtml(err.message||'حاول مرة أخرى.')+'</p></div>';
+    toast('تعذر الاتصال بالذكاء الاصطناعي');
+  }
+}
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 const questions=[['ما ناتج 2 + 3؟',['4','5','6','7'],1],['أي كوكب يُعرف بالكوكب الأحمر؟',['الأرض','المريخ','الزهرة','المشتري'],1],['ما وحدة قياس القوة؟',['واط','جول','نيوتن','فولت'],2],['ما ناتج 5 × 4؟',['10','15','20','25'],2],['ما الذي يربط كل عنصر في المجال بعنصر واحد في المدى؟',['المتجه','الدالة','المصفوفة','المعادلة'],1]];
 let quizAnswers={};
